@@ -4,13 +4,13 @@ import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "ty
 
 @Entity()
 export class Project {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn('uuid')
     id: string;
 
     @Column()
     name: string;
 
-    @Column({ nullable: true})
+    @Column({ nullable: true, default: ''})
     description: string;
 
     @Column({ type: 'timestamp'})
@@ -24,7 +24,5 @@ export class Project {
 
     @OneToMany(()=> Task, (task)=> task.project)
     tasks: Task[];
-
-
-
 }
+ 

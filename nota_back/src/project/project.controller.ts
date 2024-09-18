@@ -1,34 +1,51 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Delete, Request, Param } from '@nestjs/common';
 import { ProjectService } from './project.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
+import { Project } from './entities/project.entity';
+import { User } from 'src/user/entities/user.entity';
 
 @Controller('project')
 export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}
 
   @Post()
-  create(@Body() createProjectDto: CreateProjectDto) {
-    return this.projectService.create(createProjectDto);
+  async create(@Body() createProjectoDto: CreateProjectDto): Promise<Project>{
+    return this.projectService.createProject(createProjectoDto)
   }
 
   @Get()
-  findAll() {
-    return this.projectService.findAll();
+  async findAll(@Request() req: any){
+    const user = req.user;
+    return this.projectService.AllProyects(user);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.projectService.findOne(+id);
+  async findOne(@Param('id') id: string, @Request() req: any){
+    const user = req.user;
+    return this.projectService.ProjectId(id, user)
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProjectDto: UpdateProjectDto) {
-    return this.projectService.update(+id, updateProjectDto);
+  @Put(':id')
+  async update(
+    @Param('id') id: string,
+    @Body() UpdateProjectDto: UpdateProjectDto,
+    @Request() req: any,
+  ){
+    const user = req.user;
+    return this.projectService.updateProject(id, UpdateProjectDto, user)
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.projectService.remove(+id);
+  async delete(@Param('id') id: string, @Request() req: any){
+    const user = req.user;
+    return this.projectService.deleteProejct(id, user)
   }
-}
+
+  @Get(':id/tasks')
+  async getProjectTasks(@Param('id')id: string, @Request() req: any){
+    const user = req.user;
+    return this.projectService.ProjectTasks(id, user) 
+  }
+
+} 

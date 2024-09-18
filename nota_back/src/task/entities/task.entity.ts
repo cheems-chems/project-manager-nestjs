@@ -2,6 +2,11 @@ import { Project } from "src/project/entities/project.entity";
 import { User } from "src/user/entities/user.entity";
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
+enum TasKStatus{
+       PENDING = 'pending',
+       IN_PROGRESS = 'in_progress',
+       COMPLETED = 'completed' 
+}
 @Entity()
 export class Task {
     @PrimaryGeneratedColumn('uuid')
@@ -10,13 +15,14 @@ export class Task {
     @Column()
     title: string;
 
-    @Column({ nullable: true})
+    @Column({ nullable: true, default: ''})
     description: string;
 
     @Column({type: 'timestamp'})
     dueDate: Date;
 
-    @Column({ default: 'pending'})
+
+    @Column({ type: 'enum', enum: TasKStatus, default: TasKStatus.PENDING})
     status: string;
 
     @ManyToOne(()=> Project, (project) => project.tasks)

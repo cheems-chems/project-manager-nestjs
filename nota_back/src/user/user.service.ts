@@ -40,7 +40,10 @@ export class UserService {
   }
 
   async findOne(id: string): Promise<Omit<User, 'password'>> {
-    const user = await this.userRepository.findOne({ where: { id } });
+    const user = await this.userRepository.findOne({ 
+      where: { id },
+      relations: [ 'projects' ]
+    });
     if (!user) throw new NotFoundException(`Usuario con ID ${id} no encontrado`);
 
     const { password, ...result } = user;
