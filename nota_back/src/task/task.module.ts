@@ -7,7 +7,7 @@ import { Project } from 'src/project/entities/project.entity';
 import { User } from 'src/user/entities/user.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Task, Project, User])],
+  imports: [TypeOrmModule.forFeature([Task, Project])],
   controllers: [TaskController],
   providers: [TaskService],
 })

@@ -1,11 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Task } from './entities/task.entity';
 import { Repository } from 'typeorm';
 import { Project } from 'src/project/entities/project.entity';
-import { User } from 'src/user/entities/user.entity';
+import { promises } from 'dns';
 
 @Injectable()
 export class TaskService {
@@ -14,35 +14,44 @@ export class TaskService {
     private readonly taskRepository: Repository<Task>,
     @InjectRepository(Project)
     private readonly projectRepository: Repository<Project>,
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>
   ){}
 
   async createTask(createTaskDto: CreateTaskDto): Promise<Task> {
-    const { title, description, dueDate, status, projectId, userId } = createTaskDto;
+    const { projectId, userId, title, description, dueDate, status } = createTaskDto;
+    
+    const project = await this.projectRepository.findOne({where:{id:projectId}});
+    if (!project) throw new NotFoundException('Project not found');
 
-    const project = await this.projectRepository.findOneBy({ id: projectId });
-    if (!project) {
-      throw new Error('Projecto no encontrado');
-    }
-
-    const user = await this.userRepository.findOneBy({ id: userId });
-    if (!user) {
-      throw new Error('Usuario no encontrado');
-    }
-
-    // Convert dueDate from string to Date
-    const due = new Date(dueDate);
-
-    const newTask = this.taskRepository.create({
+    const task = this.taskRepository.create({
       title,
       description,
-      dueDate: due,
+      dueDate,
       status,
       project,
-      user,
+      user: { id: userId } // Solo asignamos el id
     });
 
-    return this.taskRepository.save(newTask);
+    return this.taskRepository.save(task);
+  }
+
+  async findAllTasks(): Promise<Task[]>{
+    return this.taskRepository.find({ relations: ['project', 'user']})
+  }
+
+  async findTaskId(id: string): Promise<Task>{
+    const task = await this.taskRepository.findOne({ where: {id: id}});
+    if(!task) throw new NotFoundException(`Tarea no encontrada`);
+    return task;
+  }
+
+  async updateTask(id: string, updateTaskDto: UpdateTaskDto): Promise<Task>{
+    const task = await this.findTaskId(id);
+    Object.assign(task, updateTaskDto);
+    return this.taskRepository.save(task)
+  }
+
+  async removeTask(id: string){
+    const task = await this.findTaskId(id);
+    return this.taskRepository.remove(task)
   }
 }
