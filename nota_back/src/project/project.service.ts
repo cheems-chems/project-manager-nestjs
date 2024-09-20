@@ -48,7 +48,11 @@ export class ProjectService {
 
   // obtiner un proyecto por su ID y Usuario
   async ProjectId(id: string, user: User):Promise<Project> {
-    const project = await this.projectRepository.findOne({ where: {id, user}})
+    const project = await this.projectRepository.findOne(
+      { where: {id, user},
+      relations: ['tasks']
+    }
+    )
     if (!project) {
       throw new NotFoundException('Projecto no encontrado')
     }
