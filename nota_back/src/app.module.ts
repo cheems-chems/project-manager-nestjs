@@ -12,23 +12,23 @@ import { JwtModule } from '@nestjs/jwt';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [ typeorm ]
+      load: [typeorm]
     }),
     TypeOrmModule.forRootAsync({
-      inject: [ ConfigService ],
+      inject: [ConfigService],
       useFactory: (config: ConfigService) => config.get('typeorm'),
     }),
-    UserModule, 
-    ProjectModule, 
-    TaskModule, 
+    UserModule,
+    ProjectModule,
+    TaskModule,
     AuthModule,
     JwtModule.register({
       global: true,
       signOptions: { expiresIn: '1h'},
-      secret: process.env.JWT_SECRET,
-    }),
+      secret: process.env.JWT_SECRET
+    })
   ],
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule { }

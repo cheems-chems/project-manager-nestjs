@@ -17,7 +17,7 @@ export class AuthService {
     return { message: 'Usuario registrado', userId: user.id}
   }
 
-  async login(userDto: any): Promise<any> {
+  async login(userDto: LoginDto){
     const { email, password } = userDto;
     const { exists, user} = await this.userService.findEmail(email);
 
@@ -25,8 +25,19 @@ export class AuthService {
       throw new UnauthorizedException('Credenciales Invalidas')
     }
 
-    const payload = { userId: user.id, email: user.email};
-    const token = this.jwtService.sign(payload);
-    return { access_token: token}
+    const payload = { 
+      sub: user.id, 
+      email: user.email
+    };
+
+    const token = this.jwtService.sign(payload, {
+      secret: process.env.JWT_SECRET,
+      expiresIn: '1h'
+    });
+
+    return {
+      success: 'Usuario ha hiciado sesion exitosamente',
+      token
+    }
   }
 }

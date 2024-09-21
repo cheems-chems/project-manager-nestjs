@@ -9,7 +9,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('register')
-  @UsePipes( new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true}))
+  @UsePipes( new ValidationPipe({ whitelist: true}))
   async register(@Body() createUserDto: RegisterDto){
     return this.authService.register(createUserDto);
   }
@@ -20,9 +20,9 @@ export class AuthController {
     return this.authService.login(loginDto);
   }
 
-  @Post('logout')
-  @UsePipes( new ValidationPipe({ whitelist: true}))
-  async logout(@Body() logout){
-    return logout
-  }
+  // @Post('logout')
+  // @UsePipes( new ValidationPipe({ whitelist: true}))
+  // async logout(@Body() logout){
+  //   return logout
+  // }
 }
