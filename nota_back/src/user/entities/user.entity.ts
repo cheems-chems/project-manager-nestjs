@@ -22,10 +22,10 @@ export class User {
     @Column({ default: true })
     isActive: boolean;
 
-    @OneToMany(() => Project, (project) => project.user)
+    @OneToMany(() => Project, (project) => project.user, {cascade: true})
     projects: Project[];
 
-    @OneToMany(() => Task, (task) => task.user)
+    @OneToMany(() => Task, (task) => task.user, {cascade: true})
     tasks: Task[];
 }
 

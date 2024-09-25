@@ -19,10 +19,10 @@ export class Project {
     @Column({ type: 'timestamp'})
     endDate: Date;
 
-    @ManyToOne(()=> User, (user)=> user.projects)
+    @ManyToOne(()=> User, (user)=> user.projects, {onDelete: 'CASCADE'})
     user: User;
 
-    @OneToMany(()=> Task, (task)=> task.project)
+    @OneToMany(()=> Task, (task)=> task.project, {cascade: true})
     tasks: Task[];
 }
  

@@ -9,11 +9,16 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('register')
-  @UsePipes( new ValidationPipe({ whitelist: true}))
-  async register(@Body() createUserDto: RegisterDto){
-    return this.authService.register(createUserDto);
+  @UsePipes(new ValidationPipe({ whitelist: true }))
+  async register(@Body() createUserDto: RegisterDto) {
+    try {
+      return await this.authService.register(createUserDto);
+    } catch (error) {
+      console.error('Error en el registro:', error);
+      throw error; // Esto enviará el error al cliente y lo registrará
+    }
   }
-
+  
   @Post('login')
   @UsePipes( new ValidationPipe({ whitelist: true}))
   async login(@Body() loginDto: LoginDto){

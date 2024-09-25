@@ -14,7 +14,7 @@ async function bootstrap() {
     // transform: true,
   }));
 
-  const PORT = 3000
+  const PORT = 3001
   await app.listen(PORT);
   console.log(`Servidor funcionando correctamente en el puerto ${PORT}`);
   

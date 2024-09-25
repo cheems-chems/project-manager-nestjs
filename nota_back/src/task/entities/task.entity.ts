@@ -25,9 +25,9 @@ export class Task {
     @Column({ type: 'enum', enum: TasKStatus, default: TasKStatus.PENDING})
     status: string;
 
-    @ManyToOne(()=> Project, (project) => project.tasks)
+    @ManyToOne(()=> Project, (project) => project.tasks, {onDelete: 'CASCADE'})
     project: Project;
 
-    @ManyToOne(()=> User, (user)=> user.tasks)
+    @ManyToOne(()=> User, (user)=> user.tasks, { onDelete: 'CASCADE'})
     user: User;
 }
