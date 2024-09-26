@@ -7,6 +7,7 @@ enum TasKStatus{
        IN_PROGRESS = 'in_progress',
        COMPLETED = 'completed' 
 }
+
 @Entity()
 export class Task {
     @PrimaryGeneratedColumn('uuid')

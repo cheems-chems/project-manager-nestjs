@@ -96,27 +96,15 @@ export class UserService {
     return this.userRepository.save(user)
   }
 
-  // async remove(id: string): Promise<string> {
-  //   const user = await this.userRepository.findOne({
-  //     where: {id},
-  //     relations: ['tasks', 'projects'],
-  //   });
-  //   if(!user){
-  //     throw new NotFoundException(`Usuario con el ID ${id} no encontrado`);
-  //   }
+  async remove(id: string): Promise<{message: string}> {
+    const user = await this.userRepository.findOneBy({ id: id });
 
-  //   // Eliminar Tareas relacionadas
-  //   if(user.tasks && user.tasks.length > 0){
-  //     await this.taskRepository.remove(user.tasks);
-  //   }
+    if (!user) {
+      throw new Error('Usuario no encontrado');
+    }
 
-  //   // Eliminar Proyecto relacionados
-  //   if(user.projects && user.projects.length > 0 ){
-  //     await this.projectRepository.remove(user.projects);
-  //   }
+    await this.userRepository.remove(user);
 
-  //   // Eliminar el usuario
-  //   await this.userRepository.remove(user);
-  //   return `Usuario eliminado correctamente `
-  // }
+    return { message: `Usuario con ID ${id} eliminado correctamente` };
+  }
 }
