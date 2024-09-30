@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Put, Delete, Request, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Delete, Request, Param, HttpException } from '@nestjs/common';
 import { ProjectService } from './project.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
@@ -37,10 +37,14 @@ export class ProjectController {
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: string, @Request() req: any){
-    const user = req.user;
-    return this.projectService.deleteProejct(id, user)
-  }
+  async delete(@Param('id') id: string, @Request() req: any) {
+    try {
+        await this.projectService.deleteProject(id, req.user);
+        return { message: 'Proyecto eliminado con éxito' };
+    } catch (error) {
+        throw new HttpException(error.message, error.status);
+    }
+}
 
   @Get(':id/tasks')
   async getProjectTasks(@Param('id')id: string, @Request() req: any){

@@ -5,30 +5,22 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcryptjs'
-import { Task } from 'src/task/entities/task.entity';
-import { Project } from 'src/project/entities/project.entity';
 
 @Injectable()
 export class UserService {
-
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-    // @InjectRepository(Task)
-    // private readonly taskRepository: Repository<Task>,
-    // @InjectRepository(Project)
-    // private readonly projectRepository: Repository<Project>,
   ) { }
 
+  // Crear userios
   async create(createUserDto: CreateUserDto): Promise<Omit<User, 'password'>> {
     const { name, email, password } = createUserDto;
 
     const { exists, message } = await this.findEmail(email)
-
     exists && (() => { throw new ConflictException(message); })();
 
     const hashedPassword = await bcrypt.hash(password, 10)
-
     const user = this.userRepository.create({
       name,
       email,
@@ -40,22 +32,22 @@ export class UserService {
     return result;
   }
 
+  // Obtener todos los userios (sin las contraseñas)
   async findAll(): Promise<Omit<User, 'password'>[]> {
     const users = await this.userRepository.find();
     return users.map(({ password, ...user }) => user)
   }
 
+  // Obtener un usuario por ID (sin la contraseña)
   async findOne(id: string): Promise<Omit<User, 'password'>> {
-    const user = await this.userRepository.findOne({ 
-      where: { id },
-      relations: [ 'projects' ]
-    });
+    const user = await this.userRepository.findOne({ where: { id }, relations: ['projects']});
     if (!user) throw new NotFoundException(`Usuario con ID ${id} no encontrado`);
 
     const { password, ...result } = user;
     return result;
   }
 
+  // Buscar un usuario por email
   async findEmail(email: string): Promise<{ exists: boolean, message: string, user?: User }> {
     const user = await this.userRepository.findOne({ where: { email } })
     return user
@@ -63,9 +55,9 @@ export class UserService {
       : { exists: false, message: 'este corrego no esta registrado' }
   }
 
+  // Actualizar usuario por ID
   async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
     const { email, password, ...otherUpdates } = updateUserDto;
-
     const user = await this.userRepository.findOne({ where: { id }});
     if(!user){
       throw new NotFoundException(`Usuario por el id no encontrado`);
@@ -96,15 +88,12 @@ export class UserService {
     return this.userRepository.save(user)
   }
 
+  // Eliminar usuario por ID
   async remove(id: string): Promise<{message: string}> {
     const user = await this.userRepository.findOneBy({ id: id });
-
-    if (!user) {
-      throw new Error('Usuario no encontrado');
-    }
-
+    if (!user) throw new Error('Usuario no encontrado');
+    
     await this.userRepository.remove(user);
-
     return { message: `Usuario con ID ${id} eliminado correctamente` };
   }
 }

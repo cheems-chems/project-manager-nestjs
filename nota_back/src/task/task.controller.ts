@@ -1,8 +1,7 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put } from '@nestjs/common';
 import { TaskService } from './task.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
-import { Task } from './entities/task.entity';
 
 @Controller('task')
 export class TaskController {
@@ -14,8 +13,8 @@ export class TaskController {
   }
 
   @Get()
-  async getAllTasks(){
-    return this.getAllTasks();
+  async getAllTasks() {
+    return this.taskService.findAllTasks(); // Llama al método correcto para obtener las tareas
   }
 
   @Get(':id')
@@ -24,7 +23,7 @@ export class TaskController {
   }
 
   @Put(':id')
-  async updateTask(@Param('id')id: string, @Body() updateTaskDto, UpdateTaskDto){
+  async updateTask(@Param('id')id: string, @Body() updateTaskDto: UpdateTaskDto){
     return this.taskService.updateTask(id, updateTaskDto);
   }
 

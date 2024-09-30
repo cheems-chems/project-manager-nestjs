@@ -22,7 +22,6 @@ export class Task {
     @Column({type: 'timestamp'})
     dueDate: Date;
 
-
     @Column({ type: 'enum', enum: TasKStatus, default: TasKStatus.PENDING})
     status: string;
 

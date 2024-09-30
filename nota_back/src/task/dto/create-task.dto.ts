@@ -6,7 +6,7 @@ export class CreateTaskDto {
   @IsNotEmpty()
   @IsString()
   title: string;
-
+ 
   @IsOptional()
   @IsString()
   description?: string;
@@ -22,9 +22,9 @@ export class CreateTaskDto {
 
   @IsNotEmpty()
   @IsString()
-  projectId: string; // UUID del proyecto al que pertenece la tarea
+  projectId: string; 
 
   @IsNotEmpty()
   @IsString()
-  userId: string; // UUID del usuario asignado a la tarea
+  userId: string; 
 }

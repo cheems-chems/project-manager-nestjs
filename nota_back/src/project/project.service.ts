@@ -70,10 +70,15 @@ export class ProjectService {
   }
 
   // Eliminar un proyecto por su ID 
-  async deleteProejct(id: string, user:User){
+  async deleteProject(id: string, user: User) {
     const project = await this.ProjectId(id, user);
-    await this.projectRepository.remove(project)
-  }
+    
+    if (!project) {
+        throw new NotFoundException('Proyecto no encontrado');
+    }
+    
+    await this.projectRepository.remove(project);
+}
   // Obtener las tareas de un proyecto específico
   async ProjectTasks(id: string, user: User): Promise<Task[]>{
      const project = await this.ProjectId(id, user);

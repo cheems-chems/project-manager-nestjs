@@ -19,27 +19,23 @@ export class AuthService {
 
   async login(userDto: LoginDto) {
     const { email, password } = userDto;
-    try {
-      const { exists, user } = await this.userService.findEmail(email);
-      
-      if (!exists || !(await bcrypt.compare(password, user.password))) {
-        throw new UnauthorizedException('Credenciales Invalidas');
-      }
+    const { exists, user } = await this.userService.findEmail(email);
   
-      const payload = { sub: user.id, email: user.email };
-      const token = this.jwtService.sign(payload, {
-        secret: process.env.JWT_SECRET,
-        expiresIn: '1h',
-      });
-  
-      return {
-        success: 'Usuario ha iniciado sesión exitosamente',
-        token,
-      };
-    } catch (error) {
-      console.error('Error en el login:', error);
-      throw error; // Esto enviará el error al controlador
+    if (!exists || !(await bcrypt.compare(password, user.password))) {
+      throw new UnauthorizedException('Credenciales inválidas');
     }
-  }
+  
+    const payload = { sub: user.id, email: user.email };
+    const token = this.jwtService.sign(payload, {
+      secret: process.env.JWT_SECRET,
+      expiresIn: '1h',
+    });
+  
+    return {
+      success: true,
+      message: 'Usuario ha iniciado sesión exitosamente',
+      token,
+    };
+  }  
   
 }

@@ -11,6 +11,6 @@ export class UpdateUserDto {
   email?: string;
 
   @IsOptional()
-  @MinLength(6)
+  @MinLength(8)
   password?: string;
 }

@@ -12,8 +12,8 @@ const config = {
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
     autoLoadEntities: true, //Carga automáticamente las entidades definidas en el proyecto
-    synchronize: true, // Sincroniza las entidades con la base de datos (esto puede eliminar y recrear tablas en cada inicio)
-    dropSchema: true, // Elimina todas las tablas antes de sincronizar (útil para desarrollo, no usar en producción)
+    synchronize: false, // Sincroniza las entidades con la base de datos (esto puede eliminar y recrear tablas en cada inicio)
+    dropSchema: false, // Elimina todas las tablas antes de sincronizar (útil para desarrollo, no usar en producción)
     logging: false, // Habilita o deshabilita el logging de SQL (puede ser útil para debugging)
     entities: [__dirname + '/../**/*.entity{.ts,.js}'], 
     migrations: [__dirname + '/../migrations/*{.ts,.js}']

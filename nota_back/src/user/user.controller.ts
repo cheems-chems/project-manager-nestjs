@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put, HttpException, HttpStatus } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 
@@ -7,22 +7,38 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
-  findAll() {
-    return this.userService.findAll();
+  async findAll() {
+    try {
+      return await this.userService.findAll();
+    } catch (error) {
+      throw new HttpException('Error al obtener usuarios', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(id);
+  async findOne(@Param('id') id: string) {
+    try {
+      return await this.userService.findOne(id);
+    } catch (error) {
+      throw new HttpException(`Usuario con ID ${id} no encontrado`, HttpStatus.NOT_FOUND);
+    }
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(id, updateUserDto);
+  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    try {
+      return await this.userService.update(id, updateUserDto);
+    } catch (error) {
+      throw new HttpException(`Error al actualizar el usuario con ID ${id}`, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(id); 
+  async remove(@Param('id') id: string) {
+    try {
+      return await this.userService.remove(id);
+    } catch (error) {
+      throw new HttpException(`Error al eliminar el usuario con ID ${id}`, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }
