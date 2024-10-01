@@ -11,7 +11,7 @@ export class UserController {
     try {
       return await this.userService.findAll();
     } catch (error) {
-      throw new HttpException('Error al obtener usuarios', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException('Error al obtener los usuarios', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 

@@ -1,9 +1,8 @@
-import { Controller, Get, Post, Body, Put, Delete, Request, Param, HttpException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Delete, Request, Param, HttpException, InternalServerErrorException} from '@nestjs/common';
 import { ProjectService } from './project.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { Project } from './entities/project.entity';
-import { User } from 'src/user/entities/user.entity';
 
 @Controller('project')
 export class ProjectController {
@@ -11,19 +10,31 @@ export class ProjectController {
 
   @Post()
   async create(@Body() createProjectoDto: CreateProjectDto): Promise<Project>{
-    return this.projectService.createProject(createProjectoDto)
+    try{
+      return this.projectService.createProject(createProjectoDto)
+    }catch(error){
+      throw new InternalServerErrorException('Error al crear el porjecto: ', error.message)
+    }
   }
 
   @Get()
   async findAll(@Request() req: any){
-    const user = req.user;
-    return this.projectService.AllProyects(user);
+    try {
+      const user = req.user;
+      return this.projectService.AllProyects(user);
+    } catch (error) {
+      throw new InternalServerErrorException('Error al encontrar los porjectos: ', error.message)
+    }
   }
 
   @Get(':id')
   async findOne(@Param('id') id: string, @Request() req: any){
-    const user = req.user;
-    return this.projectService.ProjectId(id, user)
+    try {
+      const user = req.user;
+      return this.projectService.ProjectId(id, user)
+    } catch (error) {
+      throw new InternalServerErrorException('Error al encontrar el projecto: ', error.message)
+    }
   }
 
   @Put(':id')
@@ -32,8 +43,12 @@ export class ProjectController {
     @Body() UpdateProjectDto: UpdateProjectDto,
     @Request() req: any,
   ){
-    const user = req.user;
-    return this.projectService.updateProject(id, UpdateProjectDto, user)
+    try {
+      const user = req.user;
+      return this.projectService.updateProject(id, UpdateProjectDto, user)
+    } catch (error) {
+      throw new InternalServerErrorException('Error al cambiar el projecto: ', error.message)
+    }
   }
 
   @Delete(':id')
@@ -48,8 +63,12 @@ export class ProjectController {
 
   @Get(':id/tasks')
   async getProjectTasks(@Param('id')id: string, @Request() req: any){
-    const user = req.user;
-    return this.projectService.ProjectTasks(id, user) 
+    try {
+      const user = req.user;
+      return this.projectService.ProjectTasks(id, user) 
+    } catch (error) {
+      throw new InternalServerErrorException('Error al encontrar el projecto y las tareas: ', error.message)
+    }
   }
 
 } 

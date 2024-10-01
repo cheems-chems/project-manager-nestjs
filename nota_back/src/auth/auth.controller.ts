@@ -1,6 +1,5 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UsePipes, ValidationPipe, UnauthorizedException, InternalServerErrorException } from '@nestjs/common';
+import { Controller, Post, Body,UsePipes, ValidationPipe } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 
@@ -11,7 +10,12 @@ export class AuthController {
   @Post('register')
   @UsePipes(new ValidationPipe({ whitelist: true }))
   async register(@Body() createUserDto: RegisterDto) {
+    try {
       return this.authService.register(createUserDto);
+    } catch (error) {
+      console.error('Error en el registro:', error.message);
+      throw error
+    }
   }
 
   @Post('login')
@@ -21,8 +25,6 @@ export class AuthController {
       return await this.authService.login(loginDto);
     } catch (error) {
       console.error('Error en el login:', error.message);
-  
-      // Reenviar el error tal como es
       throw error;
     }
   }

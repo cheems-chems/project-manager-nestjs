@@ -23,7 +23,6 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       message: message,
     });
 
-    // Muestra un log simplificado en la consola
     console.error(`[Error]: ${message}`);
   }
 }
