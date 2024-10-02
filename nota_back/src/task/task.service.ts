@@ -27,7 +27,7 @@ export class TaskService {
       dueDate,
       status,
       project,
-      user: { id: userId } // Solo asignamos el id
+      user: { id: userId }
     });
 
     return this.taskRepository.save(task);

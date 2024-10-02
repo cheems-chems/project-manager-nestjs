@@ -1,10 +1,15 @@
-import { Controller, Get, Post, Body, Put, Delete, Request, Param, HttpException, InternalServerErrorException} from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Delete, Request, Param, HttpException, InternalServerErrorException, UseGuards} from '@nestjs/common';
 import { ProjectService } from './project.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { Project } from './entities/project.entity';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
 
+@ApiTags('Project')
+@ApiBearerAuth()
 @Controller('project')
+@UseGuards(AuthGuard)
 export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}
 

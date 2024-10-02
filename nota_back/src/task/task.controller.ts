@@ -1,9 +1,14 @@
-import { Controller, Get, Post, Body, Param, Delete, Put, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put, InternalServerErrorException, NotFoundException, UseGuards } from '@nestjs/common';
 import { TaskService } from './task.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
 
+@ApiTags('Task')
+@ApiBearerAuth()
 @Controller('task')
+@UseGuards(AuthGuard)
 export class TaskController {
   constructor(private readonly taskService: TaskService) { }
 
@@ -19,7 +24,7 @@ export class TaskController {
   @Get()
   async getAllTasks() {
     try {
-      const tasks = this.taskService.findAllTasks(); // Llama al método correcto para obtener las tareas
+      const tasks = this.taskService.findAllTasks();
       if (!tasks || (await tasks).length === 0) {
         throw new NotFoundException('no hay tareas')
       }
