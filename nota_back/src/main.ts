@@ -29,9 +29,9 @@ async function bootstrap() {
 
   app.useGlobalPipes( new ValidationPipe());
 
-  const PORT = 3001
-  await app.listen(PORT);
-  console.log(`Servidor funcionando correctamente en el puerto ${PORT}`);
+  const port = process.env.PORT ||3001
+  await app.listen(port);
+  console.log(`Servidor funcionando correctamente en el puerto ${port}`);
   
 }
 bootstrap();
