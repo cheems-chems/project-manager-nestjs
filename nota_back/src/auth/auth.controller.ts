@@ -1,4 +1,4 @@
-import { Controller, Post, Body,UsePipes, ValidationPipe } from '@nestjs/common';
+import { Controller, Post, Body,UsePipes, ValidationPipe, BadRequestException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
@@ -16,7 +16,7 @@ export class AuthController {
       return this.authService.register(createUserDto);
     } catch (error) {
       console.error('Error en el registro:', error.message);
-      throw error
+      throw new BadRequestException('Error en el registro: ' + error.message);
     }
   }
 
